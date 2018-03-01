@@ -32,11 +32,44 @@ public class AcmiMap<K, V> {
     }
 
 
+    public void add(K k, V v) {
+
+        // check to see if there's already a matching key in the kvList
+        boolean isReallyModify = find(k);
+
+        if (isReallyModify) {
+            // modify
+        } else {
+            Pair<? extends K, ? extends V> kvPair = new Pair(k, v);
+            kvList.add(kvPair);
+            recordOperation(OPERATION_ADD, v);
+        }
+
+    }
+
+
+    public void modify
+
+
+    private boolean find(K k) {
+        boolean found = false;
+        for (Pair<? extends K, ? extends V> kvPair : kvList) {
+            if (kvPair.getKey() == k) {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    }
 
     private void recordOperation(String operation, V value) {
         Pair<String, String> operationPair = new Pair<>(operation, value.toString());
         operationStack.push(operationPair);
     }
+
+
+
 
 
     public void printDelta() {
