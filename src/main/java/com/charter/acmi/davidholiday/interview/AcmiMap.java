@@ -26,7 +26,7 @@ public class AcmiMap<K extends Object, V extends Object> {
      * @param
      */
     public AcmiMap(K k, V v) {
-        Pair<K, V> initialPair = new Pair(k, v);
+        Pair<K, V> initialPair = new Pair<>(k, v);
         kvList = Stream.of(initialPair).collect(Collectors.toList());
         recordOperation(OPERATION_ADD, v);
     }
@@ -35,12 +35,12 @@ public class AcmiMap<K extends Object, V extends Object> {
     public void add(K k, V v) {
 
         // check to see if there's already a matching key in the kvList
-        boolean isReallyModify = find(k).getKey();
+        boolean isReallyModify = exists(k);
 
         if (isReallyModify) {
             modify(k, v);
         } else {
-            Pair<K, V> kvPair = new Pair(k, v);
+            Pair<K, V> kvPair = new Pair<>(k, v);
             kvList.add(kvPair);
             recordOperation(OPERATION_ADD, v);
         }
@@ -65,6 +65,22 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    public void delete(K k) {
+        Pair<Boolean, Integer> findResultPair = find(k);
+        boolean exists = findResultPair.getKey();
+        if (exists) {
+            Integer existingPairIndex = findResultPair.getValue();
+            kvList.remove(existingPairIndex);
+        }
+    }
+
+
+    public boolean exists(K k) {
+        Pair<Boolean, Integer> findResults = find(k);
+        return findResults.getKey();
+    }
+
+
     private Pair<Boolean, Integer> find(K k) {
         Boolean found = false;
         Integer index = -1;
@@ -83,9 +99,6 @@ public class AcmiMap<K extends Object, V extends Object> {
         Pair<String, String> operationPair = new Pair<>(operation, value.toString());
         operationStack.push(operationPair);
     }
-
-
-
 
 
     public void printDelta() {
