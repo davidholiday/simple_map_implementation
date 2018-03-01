@@ -69,7 +69,7 @@ public class AcmiMap<K extends Object, V extends Object> {
         Pair<Boolean, Integer> findResultPair = find(k);
         boolean exists = findResultPair.getKey();
         if (exists) {
-            Integer existingPairIndex = findResultPair.getValue();
+            int existingPairIndex = findResultPair.getValue();
             V v = kvList.get(existingPairIndex).getValue();
             kvList.remove(existingPairIndex);
             recordOperation(OPERATION_DELETE, k, v);
@@ -78,17 +78,17 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
-    public Pair<K, V> get(K k) {
-        Pair<K, V> returnPair = null;
+    public V get(K k) {
+        V returnValue = null;
         Pair<Boolean, Integer> findResultPair = find(k);
         boolean exists = findResultPair.getKey();
         if (exists) {
             Integer existingPairIndex = findResultPair.getValue();
             Pair<K, V> existingPair = kvList.get(existingPairIndex);
-            returnPair = new Pair<>(existingPair.getKey(), existingPair.getValue());
+            returnValue = existingPair.getValue();
         }
 
-        return returnPair;
+        return returnValue;
     }
 
 
