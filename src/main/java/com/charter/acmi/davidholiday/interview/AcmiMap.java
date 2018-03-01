@@ -8,6 +8,13 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+/**
+ * basic implementation of a map data structure
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class AcmiMap<K extends Object, V extends Object> {
 
     // keys for the operations stack
@@ -32,6 +39,12 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * adds a value to the map. if the kv pair already exists executes a modify operation
+     *
+     * @param k
+     * @param v
+     */
     public void add(K k, V v) {
 
         // check to see if there's already a matching key in the kvList
@@ -48,6 +61,12 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * modifies an existing kv pair in the map. if kv pair doesn't exist executes an add operation
+     *
+     * @param k
+     * @param v
+     */
     public void modify(K k, V v) {
         // check to see if there's already a matching key in the kvList
         Pair<Boolean, Integer> findResultPair = find(k);
@@ -65,6 +84,11 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * removes a kv pair from the list, if it exists. if it doesn't nothing happens.
+     *
+     * @param k
+     */
     public void delete(K k) {
         Pair<Boolean, Integer> findResultPair = find(k);
         boolean exists = findResultPair.getKey();
@@ -78,6 +102,12 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * returns a given value for a key, if it exists. if it doesn't exist null is returned.
+     *
+     * @param k
+     * @return
+     */
     public V get(K k) {
         V returnValue = null;
         Pair<Boolean, Integer> findResultPair = find(k);
@@ -92,17 +122,34 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * returns the number of pairs in the map
+     *
+     * @return
+     */
     public int getMapSize() {
         return kvList.size();
     }
 
 
+    /**
+     * returns a boolean indicating whether or not there's a given key in the map
+     *
+     * @param k
+     * @return
+     */
     public boolean exists(K k) {
         Pair<Boolean, Integer> findResults = find(k);
         return findResults.getKey();
     }
 
 
+    /**
+     * returns whether or not a kv pair exists and its index in the kvList
+     *
+     * @param k
+     * @return
+     */
     private Pair<Boolean, Integer> find(K k) {
         Boolean found = false;
         Integer index = -1;
@@ -117,6 +164,14 @@ public class AcmiMap<K extends Object, V extends Object> {
         return new Pair<>(found, index);
     }
 
+
+    /**
+     * records a given operation to the operation stack
+     *
+     * @param operation
+     * @param key
+     * @param value
+     */
     private void recordOperation(String operation, K key, V value) {
         String operationArgument = key.toString() + "->" + value.toString();
         Pair<String, String> operationPair = new Pair<>(operation, operationArgument);
@@ -124,6 +179,9 @@ public class AcmiMap<K extends Object, V extends Object> {
     }
 
 
+    /**
+     * prints the operation stack
+     */
     public void printDelta() {
         Iterator<Pair<String, String>> operationStackIterator = operationStack.iterator();
         while (operationStackIterator.hasNext()) {
