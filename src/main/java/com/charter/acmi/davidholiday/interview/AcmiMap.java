@@ -28,7 +28,7 @@ public class AcmiMap<K extends Object, V extends Object> {
     public AcmiMap(K k, V v) {
         Pair<K, V> initialPair = new Pair<>(k, v);
         kvList = Stream.of(initialPair).collect(Collectors.toList());
-        recordOperation(OPERATION_ADD, v);
+        recordOperation(OPERATION_ADD, k, v);
     }
 
 
@@ -42,7 +42,7 @@ public class AcmiMap<K extends Object, V extends Object> {
         } else {
             Pair<K, V> kvPair = new Pair<>(k, v);
             kvList.add(kvPair);
-            recordOperation(OPERATION_ADD, v);
+            recordOperation(OPERATION_ADD, k, v);
         }
 
     }
@@ -60,7 +60,7 @@ public class AcmiMap<K extends Object, V extends Object> {
             Pair<K, V> existingKVPair = kvList.get(existingPairIndex);
             Pair<K, V> newKVPair = new Pair<>(existingKVPair.getKey(), v);
             kvList.set(existingPairIndex, newKVPair);
-            recordOperation(OPERATION_MODIFY, v);
+            recordOperation(OPERATION_MODIFY, k, v);
         }
     }
 
@@ -70,8 +70,30 @@ public class AcmiMap<K extends Object, V extends Object> {
         boolean exists = findResultPair.getKey();
         if (exists) {
             Integer existingPairIndex = findResultPair.getValue();
+            V v = kvList.get(existingPairIndex).getValue();
             kvList.remove(existingPairIndex);
+            recordOperation(OPERATION_DELETE, k, v);
         }
+
+    }
+
+
+    public Pair<K, V> get(K k) {
+        Pair<K, V> returnPair = null;
+        Pair<Boolean, Integer> findResultPair = find(k);
+        boolean exists = findResultPair.getKey();
+        if (exists) {
+            Integer existingPairIndex = findResultPair.getValue();
+            Pair<K, V> existingPair = kvList.get(existingPairIndex);
+            returnPair = new Pair<>(existingPair.getKey(), existingPair.getValue());
+        }
+
+        return returnPair;
+    }
+
+
+    public int getMapSize() {
+        return kvList.size();
     }
 
 
@@ -95,8 +117,9 @@ public class AcmiMap<K extends Object, V extends Object> {
         return new Pair<>(found, index);
     }
 
-    private void recordOperation(String operation, V value) {
-        Pair<String, String> operationPair = new Pair<>(operation, value.toString());
+    private void recordOperation(String operation, K key, V value) {
+        String operationArgument = key.toString() + "->" + value.toString();
+        Pair<String, String> operationPair = new Pair<>(operation, operationArgument);
         operationStack.push(operationPair);
     }
 
